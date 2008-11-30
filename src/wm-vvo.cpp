@@ -6,6 +6,9 @@
 
 
 
+void printLineGroup(const wm_vvo::LineGroup& l){
+    
+}
 
 int main(int argc, char* argv[]){
 
@@ -15,12 +18,13 @@ int main(int argc, char* argv[]){
   Station s1("Wasaplatz", "wasaplatz");
   Station s2("Pohlandplatz", "pohlandplatz");
 
-  s1.addLine(Line("76", ".*76.*", ".*"));
-  s1.addLine(Line("13", ".*13.*", ".*"));
+  s1.addLine(Line("61", "61", "Löbtau"));
+  s1.addLine(Line("75", "75", "Goppeln"));
+  s1.addLine(Line("13", "13", "Kaditz"));
 
 
-  s2.addLine(Line("61", ".*61.*", ".*"));
-  s2.addLine(Line("4", ".*4.*", ".*"));
+  s2.addLine(Line("61", "61", "[\\d\\w_.: -]+"));
+  s2.addLine(Line("4", "4", "[\\d\\w_.: -]+"));
 
   line.addStation(s1);
   line.addStation(s2);

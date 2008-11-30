@@ -12,17 +12,22 @@ namespace wm_vvo {
 	std::vector<Station> stations;
 	std::string headline;
 
-        std::vector<Station>::iterator findStation(const std::string& name);
 
 	public:
 	LineGroup(const std::string& headline);
 	~LineGroup();
 
 	void addStation(const Station& s);
-	Station& getStation(const std::string& name);
-	bool hasStation(const std::string& name) ;
+	const Station& getStation(const std::string& name) const;
+	bool hasStation(const std::string& name) const;
 
 	inline const std::string getHeadline() const {return headline;}
+
+        typedef std::vector<Station>::const_iterator StationIterator;
+
+        public:
+
+        StationIterator findStation(const std::string& name) const;
     };
 
 }

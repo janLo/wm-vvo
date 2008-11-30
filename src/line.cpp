@@ -1,3 +1,5 @@
+
+#include <algorithm>
 #include "line.h"
 
 namespace wm_vvo {
@@ -6,4 +8,29 @@ namespace wm_vvo {
     {
     }
     Line::~Line(){}
+
+    void Line::clearResults() const {
+        results.clear();
+    }
+    void Line::addResult(int minutes, const std::string& direction) const {
+        results.push_back(Line::Result(minutes, direction));
+        std::sort(results.begin(), results.end());
+    }
+    
+    Line::Result::Result(int minutes, const std::string direction)
+        : minutes(minutes), direction(direction), timestamp(::time(0))
+    {}
+
+    int Line::Result::getMinutes() const{
+        time_t now = time(0);
+        time_t offset = now - timestamp;
+        int offset_min = ((offset - (offset%60)) / 60);
+        int ret = minutes - offset_min;
+        return (ret >= 0 ? ret : 0);
+    }
+
+    bool operator< (const Line::Result& lhs,  const Line::Result& rhs){
+        return lhs.getMinutes() < rhs.getMinutes();
+    }
+
 }

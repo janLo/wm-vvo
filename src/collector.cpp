@@ -2,7 +2,12 @@
 #include <stdexcept>
 
 #include <boost/regex.hpp>
+#include <boost/regex/user.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string/erase.hpp>
+#include <boost/regex/icu.hpp>
+#include <boost/lexical_cast.hpp>
+
 
 #include "collector.h"
 #include "station.h"
@@ -30,6 +35,11 @@ namespace wm_vvo {
 	this->html_preplaces.push_back(std::pair<std::string, std::string>("&#246;", "ö"));
 	this->html_preplaces.push_back(std::pair<std::string, std::string>("&#223;", "ß"));
 	this->html_preplaces.push_back(std::pair<std::string, std::string>("&#252;", "ü"));
+	this->html_preplaces.push_back(std::pair<std::string, std::string>("&#228;", "ä"));
+	this->html_preplaces.push_back(std::pair<std::string, std::string>("&#196;", "Ä"));
+	this->html_preplaces.push_back(std::pair<std::string, std::string>("&#214;", "Ö"));
+	this->html_preplaces.push_back(std::pair<std::string, std::string>("&#220;", "Ü"));
+	this->html_preplaces.push_back(std::pair<std::string, std::string>("&#38;", "&"));
 //	this->html_preplaces.push_back(std::pair<std::string, std::string>("", ""));
     }
 
@@ -43,9 +53,7 @@ namespace wm_vvo {
 	return c;
     }
 
-    void Collector::fillStationResult(const Station& s)
-    {
-
+    const std::string Collector::fetchData(const std::string& station){
 	CURLcode code;
 	static char errorBuffer[CURL_ERROR_SIZE];
 
@@ -70,7 +78,7 @@ namespace wm_vvo {
 
 	std::string ort("Dresden");
 	std::string verz("1");
-	std::string url("http://widgets.vvo-online.de/abfahrtsmonitor/Abfahrten.do?ort=" + ort + "&hst=" + s.getUrlParam() + "&vz=" + verz); 
+	std::string url("http://widgets.vvo-online.de/abfahrtsmonitor/Abfahrten.do?ort=" + ort + "&hst=" + station + "&vz=" + verz); 
 	code = ::curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 	if (code != CURLE_OK)
 	    throw new std::runtime_error("cannot set URL");
@@ -88,10 +96,42 @@ namespace wm_vvo {
 
 	std::cout << readed << std::endl;
 
-        std::string regex("\\[(\\[(.*)\\],?)+\\]");
-        boost::regex e(regex);
-
+        return readed;
     }
+
+    void Collector::fillLine(const Line& line,  std::string data){
+        
+        std::string regex("\\[\"(" + line.getRegexp() + ")\",\"(" + line.getDirRegexp() + ")\",\"([\\d]+)\"\\]");
+        boost::u32regex e(boost::make_u32regex(regex));
+        boost::smatch what;
+
+        bool first = true;
+
+        while(boost::u32regex_search(data, what, e, boost::match_extra)){
+            if (first)
+                line.clearResults();
+            int minutes = boost::lexical_cast<int, std::string>(std::string(what[3]));
+            line.addResult(minutes, std::string(what[2]));
+
+            //for(int i = 0; i < what.size(); ++i)
+            //    std::cout << "      $" << i << " = \"" << what[i] << "\"\n";
+
+            boost::algorithm::erase_first(data, std::string(what[0]));
+        }
+    }
+
+    void Collector::fillStationResult(Station& s)
+    {
+
+        std::string readed(fetchData(s.getUrlParam()));
+
+        for (Station::LineIterator it = s.firstLine();
+                it != s.lastLine(); it ++) 
+        {
+            fillLine(*it, readed);
+        }
+    }
+
 
 
 }

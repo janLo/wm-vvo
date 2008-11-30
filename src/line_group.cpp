@@ -21,20 +21,20 @@ namespace wm_vvo {
 	stations.push_back(s);
     }
 
-    std::vector<Station>::iterator LineGroup::findStation(const std::string& name) {
+    LineGroup::StationIterator LineGroup::findStation(const std::string& name) const {
 	using namespace boost::lambda;
 	return std::find_if(stations.begin(), stations.end(), name == bind<std::string>(&Station::getName, _1));
     }
 
-    Station& LineGroup::getStation(const std::string& name){
-        std::vector<Station>::iterator it = findStation(name);
+    const Station& LineGroup::getStation(const std::string& name) const {
+        LineGroup::StationIterator it = findStation(name);
 	if (it == stations.end())
 	    throw new std::runtime_error("No Station found!");
 	return *it;
     }
 
-    bool LineGroup::hasStation(const std::string& name) {
-        std::vector<Station>::iterator it = findStation(name);
+    bool LineGroup::hasStation(const std::string& name) const {
+        LineGroup::StationIterator it = findStation(name);
 	return (it == stations.end() ? false : true);
     }
 

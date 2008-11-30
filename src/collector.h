@@ -6,6 +6,7 @@
 namespace wm_vvo {
 
     class Station;
+    class Line;
     class Collector : private boost::noncopyable {
 	
 	public:
@@ -14,7 +15,7 @@ namespace wm_vvo {
 	~Collector();
 	
 	static  Collector& getCollector();
-	void fillStationResult(const Station& s);
+	void fillStationResult(Station& s);
 
 	private:
 	  
@@ -23,6 +24,9 @@ namespace wm_vvo {
 	static char errorBuffer[CURL_ERROR_SIZE];
 
        	std::vector<std::pair<std::string, std::string> > html_preplaces;
+
+        const std::string fetchData(const std::string& station);
+        void fillLine(const Line& line, std::string data);
 
     };
 
