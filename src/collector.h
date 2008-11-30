@@ -15,7 +15,7 @@ namespace wm_vvo {
 	~Collector();
 	
 	static  Collector& getCollector();
-	void fillStationResult(Station& s);
+	void fillStationResult(const Station& s);
 
 	private:
 	  

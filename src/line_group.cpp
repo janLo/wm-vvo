@@ -37,5 +37,11 @@ namespace wm_vvo {
         LineGroup::StationIterator it = findStation(name);
 	return (it == stations.end() ? false : true);
     }
+    LineGroup::StationIterator LineGroup::firstStation() const {
+        return stations.begin();
+    }
+    LineGroup::StationIterator LineGroup::lastStation() const {
+        return stations.end();
+    }
 
 }

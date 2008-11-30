@@ -7,7 +7,25 @@
 
 
 void printLineGroup(const wm_vvo::LineGroup& l){
-    
+  using namespace wm_vvo;
+  for (LineGroup::StationIterator it = l.firstStation(); 
+      it != l.lastStation(); it++)
+  {
+        const Station& s = *it;
+        std::cout << "Station: " << s.getName() << std::endl;
+        for (Station::LineIterator lit = s.firstLine();
+                lit != s.lastLine(); lit++)
+        {
+            const Line& l = *lit;
+            std::cout << "  Line " << l.getName() << ":" << std::endl;
+            for (Line::ResultIterator rit = l.firstResult();
+                    rit != l.lastResult(); rit++)
+            {
+                std::cout << "    " << (*rit).getMinutes() << "  " << (*rit).getDirection() << std::endl;
+
+            }
+        }
+  }
 }
 
 int main(int argc, char* argv[]){
@@ -26,10 +44,12 @@ int main(int argc, char* argv[]){
   s2.addLine(Line("61", "61", "[\\d\\w_.: -]+"));
   s2.addLine(Line("4", "4", "[\\d\\w_.: -]+"));
 
-  line.addStation(s1);
-  line.addStation(s2);
-
   Collector::getCollector().fillStationResult(s1);
   Collector::getCollector().fillStationResult(s2);
 
+  line.addStation(s1);
+  line.addStation(s2);
+
+
+  printLineGroup(line);
 }

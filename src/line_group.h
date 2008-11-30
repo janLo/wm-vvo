@@ -25,7 +25,10 @@ namespace wm_vvo {
 
         typedef std::vector<Station>::const_iterator StationIterator;
 
-        public:
+        StationIterator firstStation() const;
+        StationIterator lastStation() const;
+
+        private:
 
         StationIterator findStation(const std::string& name) const;
     };

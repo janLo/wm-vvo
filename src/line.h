@@ -27,6 +27,7 @@ namespace wm_vvo {
 
                     Result(int minutes, const std::string direction);
                     int getMinutes() const;
+                    inline const std::string& getDirection() const {return direction;}
 
                 private:
                 std::string direction;
@@ -34,12 +35,12 @@ namespace wm_vvo {
                 time_t timestamp;
 	    };
 
-	typedef std::vector<Line::Result>::iterator result_iter;
+	typedef std::vector<Line::Result>::iterator ResultIterator;
 
 	void clearResults() const;
 	void addResult(int minutes, const std::string& direction) const;
-	inline result_iter getResultBegin() const  {return results.begin();}
-	inline result_iter getResultEnd() const {return results.end();}
+	inline ResultIterator firstResult() const  {return results.begin();}
+	inline ResultIterator lastResult() const {return results.end();}
 
 	private:
 

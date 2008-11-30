@@ -16,21 +16,21 @@ namespace wm_vvo {
        lines.push_back(l);
    }
 
-   std::vector<Line>::iterator Station::findLine(const std::string& name) {
-     using namespace boost::lambda;
-     return std::find_if(lines.begin(), lines.end(),
-         name == bind<std::string>(&Line::getName, _1));
+   Station::LineIterator Station::findLine(const std::string& name) const {
+       using namespace boost::lambda;
+       return std::find_if(lines.begin(), lines.end(),
+               name == bind<std::string>(&Line::getName, _1));
    }
 
-    Line& Station::getLine(const std::string& name){
-	std::vector<Line>::iterator it = findLine(name);
+    const Line& Station::getLine(const std::string& name) const {
+        Station::LineIterator it = findLine(name);
 	if (it == lines.end())
 	    throw new std::runtime_error("No Line found!");
 	return *it;
     }
 
-    bool Station::hasLine(const std::string& name) {
-	std::vector<Line>::iterator it = findLine(name);
+    bool Station::hasLine(const std::string& name) const {
+        Station::LineIterator it = findLine(name);
 	return (it == lines.end() ? false : true);
     }
 }

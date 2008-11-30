@@ -108,19 +108,22 @@ namespace wm_vvo {
         bool first = true;
 
         while(boost::u32regex_search(data, what, e, boost::match_extra)){
-            if (first)
+            if (first){
                 line.clearResults();
+                first = false;
+//                std::cout << "cleaned!! " << std::endl;
+            }
             int minutes = boost::lexical_cast<int, std::string>(std::string(what[3]));
             line.addResult(minutes, std::string(what[2]));
 
-            //for(int i = 0; i < what.size(); ++i)
-            //    std::cout << "      $" << i << " = \"" << what[i] << "\"\n";
+//            for(int i = 0; i < what.size(); ++i)
+//                std::cout << "      $" << i << " = \"" << what[i] << "\"\n";
 
             boost::algorithm::erase_first(data, std::string(what[0]));
         }
     }
 
-    void Collector::fillStationResult(Station& s)
+    void Collector::fillStationResult(const Station& s)
     {
 
         std::string readed(fetchData(s.getUrlParam()));

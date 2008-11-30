@@ -19,18 +19,18 @@ namespace wm_vvo {
 	~Station();
 
 	void addLine(const Line& l);
-	Line& getLine(const std::string& name);
-	bool hasLine(const std::string& name);
+	const Line& getLine(const std::string& name) const ;
+	bool hasLine(const std::string& name) const ;
 
-        typedef std::vector<Line>::iterator LineIterator;
+        typedef std::vector<Line>::const_iterator LineIterator;
 
         inline const std::string& getName() const {return name;}
         inline const std::string& getUrlParam() const {return url_param;}
-        inline LineIterator firstLine() {return lines.begin();}
-        inline LineIterator lastLine() {return lines.end();}
+        inline LineIterator firstLine() const {return lines.begin();}
+        inline LineIterator lastLine() const {return lines.end();}
 
         private:
 
-        LineIterator findLine(const std::string& name); 
+        LineIterator findLine(const std::string& name) const; 
     };
 }
