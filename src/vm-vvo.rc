@@ -1,0 +1,13 @@
+Location: "Dresden"
+Interval: "20"
+
+
+LineGroup: "Testgruppe"
+Station: "Pohlandplatz" "pohlandplatz"
+Line: "4" Dir: "Laubegast" 
+Line: "4" Dir: "Weinböhla"
+Line: "61" "E?61" Dir: "*"
+Station: "Wasaplatz" "wasaplatz"
+Line: "75" Dir: "Goppeln"
+Station: "Hauptbahnhof Nord" 
+Line: "11" Dir: "Zschertnitz"

@@ -94,7 +94,7 @@ namespace wm_vvo {
 	    boost::algorithm::replace_all(readed, (*it).first, (*it).second);
 	}
 
-	std::cout << readed << std::endl;
+//	std::cout << readed << std::endl;
 
         return readed;
     }
@@ -134,7 +134,4 @@ namespace wm_vvo {
             fillLine(*it, readed);
         }
     }
-
-
-
 }
