@@ -1,3 +1,6 @@
+#ifndef COLLECTOR_H
+#define COLLECTOR_H
+
 #include <vector>
 
 #include <boost/utility.hpp>
@@ -9,27 +12,29 @@ namespace wm_vvo {
     class Line;
     class LineGroup;
     class Collector : private boost::noncopyable {
-	
-	public:
 
-	Collector();
-	~Collector();
-	
-	static  Collector& getCollector();
-	void fillStationResult(const Station& s);
-	void fillLineGroup(const LineGroup& l);
+        public:
 
-	private:
-	  
+            Collector();
+            ~Collector();
 
-	CURL *curl;
-	static char errorBuffer[CURL_ERROR_SIZE];
+            static  Collector& getCollector();
+            void fillStationResult(const Station& s);
+            void fillLineGroup(const LineGroup& l);
 
-       	std::vector<std::pair<std::string, std::string> > html_preplaces;
+        private:
 
-        const std::string fetchData(const std::string& station);
-        void fillLine(const Line& line, std::string data);
+
+            CURL *curl;
+            static char errorBuffer[CURL_ERROR_SIZE];
+
+            std::vector<std::pair<std::string, std::string> > html_preplaces;
+
+            const std::string fetchData(const std::string& station);
+            void fillLine(const Line& line, std::string data);
 
     };
 
 }
+
+#endif

@@ -1,14 +1,13 @@
-
 #include <algorithm>
 #include "line.h"
 
 namespace wm_vvo {
     Line::Line(const std::string id, const std::string& id_regexp, const std::string& line_regexp)
-	: id_name(id), id_regexp(id_regexp), direction_regexp(line_regexp)
+        : id_name(id), id_regexp(id_regexp), direction_regexp(line_regexp)
     {
     }
     Line::Line(const std::string id, const std::string& line_regexp)
-	: id_name(id), id_regexp(id), direction_regexp(line_regexp)
+        : id_name(id), id_regexp(id), direction_regexp(line_regexp)
     {
     }
     Line::~Line(){}
@@ -20,7 +19,7 @@ namespace wm_vvo {
         results.push_back(Line::Result(minutes, direction));
         std::sort(results.begin(), results.end());
     }
-    
+
     Line::Result::Result(int minutes, const std::string direction)
         : minutes(minutes), direction(direction), timestamp(::time(0))
     {}

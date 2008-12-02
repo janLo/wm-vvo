@@ -14,10 +14,14 @@ clean:
 
 collector.o: collector.cpp \
 	collector.h \
+	line_group.h \
 	station.h \
 	line.h
 config_parser.o: config_parser.cpp \
-	config_parser.h
+	config_parser.h \
+	line.h \
+	station.h \
+	line_group.h
 line.o: line.cpp \
 	line.h
 line_group.o: line_group.cpp \

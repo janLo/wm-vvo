@@ -43,3 +43,14 @@ begin linegroup
     end station
 
 end linegroup
+
+begin linegroup
+    name = "Testgruppe 2"
+    begin station
+        name = "Reichenbachstrasse"
+        begin line
+	    name = "72"
+	    dir = ".*"
+	end line
+    end station
+end linegroup

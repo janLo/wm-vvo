@@ -19,8 +19,8 @@
 #include <boost/lexical_cast.hpp>
 
 #include "config_parser.h"
-//#include "line.h"
-//#include "station.h"
+#include "line.h"
+#include "station.h"
 #include "line_group.h"
 
 
@@ -36,8 +36,9 @@ namespace wm_vvo {
         symbols.push_back(std::map<std::string, std::string>());
 
         assignment       = *space_p >> regex_p("[a-z]+")[assign_a(key)] >> *space_p >> 
-                           ch_p('=') >> *space_p >> 
-                           ch_p('"') >> regex_p("[\\w\\d._\\*\\söäüß?\\]\\[\\\\+-]+")[assign_a(val)] >> ch_p('"')[bind(&ConfigParser::pushSymbol, this)] >> 
+                           ch_p('=') >> *space_p >> ch_p('"') >> 
+                           regex_p("[\\w\\d._\\*\\söäüß?\\]\\[\\\\+-]+")[assign_a(val)] >> 
+                           ch_p('"')[bind(&ConfigParser::pushSymbol, this)] >> 
                            *(space_p | eol_p);
 
         begin            = *space_p >> str_p("begin") >> *space_p ;
@@ -62,7 +63,8 @@ namespace wm_vvo {
                            (*(assignment | station))[bind(&ConfigParser::buildLineGroup, this)] >> 
                            linegroup_end[var(scope) = GLOBAL];
 
-        global           = eol >> *(assignment | linegroup) >> eol >> end_p[bind(&ConfigParser::setGlobalCfg, this)];
+        global           = eol >> *(assignment | linegroup) >> eol >> 
+                           end_p[bind(&ConfigParser::setGlobalCfg, this)];
 
     }
 
@@ -140,7 +142,7 @@ namespace wm_vvo {
     }
 
     void ConfigParser::parseConfig(const std::string filename){
-        
+
         std::fstream file(filename.c_str(), std::ios_base::in);
 
         std::string tmp, result;
@@ -151,24 +153,24 @@ namespace wm_vvo {
         }
     }
 
-      int ConfigParser::getDelay() const {
-          if (!parsed)
-              throw new std::runtime_error("not yet parsed!");
-          return delay;
-      }
-      int ConfigParser::getInterval() const {
-          if (!parsed)
-              throw new std::runtime_error("not yet parsed!");
-          return interval;
-      }
-      const std::string& ConfigParser::getLocation() const {
-          if (!parsed)
-              throw new std::runtime_error("not yet parsed!");
-          return location;
-      }
-      const std::vector<LineGroup> ConfigParser::getLineGroups() const {
-          if (!parsed)
-              throw new std::runtime_error("not yet parsed!");
-          return linegroup_tmp;
-      }
+    int ConfigParser::getDelay() const {
+        if (!parsed)
+            throw new std::runtime_error("not yet parsed!");
+        return delay;
+    }
+    int ConfigParser::getInterval() const {
+        if (!parsed)
+            throw new std::runtime_error("not yet parsed!");
+        return interval;
+    }
+    const std::string& ConfigParser::getLocation() const {
+        if (!parsed)
+            throw new std::runtime_error("not yet parsed!");
+        return location;
+    }
+    const std::vector<LineGroup> ConfigParser::getLineGroups() const {
+        if (!parsed)
+            throw new std::runtime_error("not yet parsed!");
+        return linegroup_tmp;
+    }
 }
