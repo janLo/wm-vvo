@@ -1,11 +1,15 @@
 #include <vector>
 #include <map>
+#include <stdexcept>
+
 #include <boost/spirit/core.hpp>
 
 namespace wm_vvo {
 
   
   class LineGroup;
+  class Station;
+  class Line;
 
   class ConfigParser {
 
@@ -32,18 +36,42 @@ namespace wm_vvo {
     boost::spirit::rule<> begin;
     boost::spirit::rule<> end;
     boost::spirit::rule<> eol;
+    boost::spirit::rule<> global;
 
     std::vector<std::map<std::string, std::string > > symbols;
     std::string key;
     std::string val;
 
+    std::vector<LineGroup> linegroup_tmp;
+    std::vector<Station> station_tmp;
+    std::vector<Line> line_tmp;
+
+    std::string location;
+    int interval;
+    int delay;
+
     void pushSymbol();
     void buildLine();
     void buildStation();
     void buildLineGroup();
+    void setGlobalCfg();
+
+    bool parsed;
 
     public:
       ConfigParser();
       void parseConfig(const std::string filename);
+
+      int getDelay() const;
+      int getInterval() const;
+      const std::string& getLocation() const;
+      const std::vector<LineGroup> getLineGroups() const;
+
+      class ParamNotFoundError : public std::runtime_error { 
+        public:
+        ParamNotFoundError(const std::string& s)
+          : std::runtime_error(s) 
+        {}
+      };
   };
 }

@@ -16,6 +16,7 @@ namespace wm_vvo {
 
 	public:
 	Station(const std::string& name, const std::string& url_param);
+        Station(const std::string& name);
 	~Station();
 
 	void addLine(const Line& l);

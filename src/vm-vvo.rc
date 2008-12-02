@@ -1,3 +1,8 @@
+location = "dresden"
+delay = "1"
+interval = "5"
+
+
 begin linegroup
     name  = "Testgruppe"
 
@@ -10,12 +15,12 @@ begin linegroup
         end line
         begin line
             name ="4" 
-            dir = "Weinböhla"
+            dir = ".*"
         end line
         begin line
             name = "61" 
             regex = "E?61" 
-            dir = "*"
+            dir = "[\w\d _.-]+"
         end line
     end station
     
@@ -24,7 +29,8 @@ begin linegroup
         urlparam = "wasaplatz"
         begin line
             name = "75" 
-            dir = "Goppeln"
+            regex = ".*75.*"
+            dir = ".*"
         end line
     end station
     
@@ -32,7 +38,7 @@ begin linegroup
         name = "Hauptbahnhof Nord" 
         begin line 
             name = "11" 
-            dir = "Zschertnitz"
+            dir = ".*"
         end line 
     end station
 

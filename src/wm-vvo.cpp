@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "line_group.h"
 #include "collector.h"
@@ -56,5 +57,15 @@ int main(int argc, char* argv[]){
 */
   ConfigParser p;
   p.parseConfig("vm-vvo.rc");
+
+  const std::vector<LineGroup>& groups = p.getLineGroups();
+
+  for (std::vector<LineGroup>::const_iterator it = groups.begin(); it != groups.end(); it++){
+    Collector::getCollector().fillLineGroup(*it);
+  printLineGroup(*it);
+
+  }
+
+
 
 }

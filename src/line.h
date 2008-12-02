@@ -10,16 +10,14 @@ namespace wm_vvo {
 	
 
 	public: 
+
 	Line(const std::string id, const std::string& id_regexp, const std::string& line_regexp);
+	Line(const std::string id, const std::string& line_regexp);
 	~Line();
-
-
 
 	inline const std::string getName() const {return id_name;}
 	inline const std::string getRegexp() const {return id_regexp;}
 	inline const std::string getDirRegexp() const {return direction_regexp;}
-
-	
 
 	    class Result {
 

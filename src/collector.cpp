@@ -10,7 +10,7 @@
 
 
 #include "collector.h"
-#include "station.h"
+#include "line_group.h"
 
 
 namespace wm_vvo {
@@ -79,6 +79,8 @@ namespace wm_vvo {
 	std::string ort("Dresden");
 	std::string verz("1");
 	std::string url("http://widgets.vvo-online.de/abfahrtsmonitor/Abfahrten.do?ort=" + ort + "&hst=" + station + "&vz=" + verz); 
+        boost::algorithm::replace_all(url, " ", "%20");
+        //std::cout << url << std::endl;
 	code = ::curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 	if (code != CURLE_OK)
 	    throw new std::runtime_error("cannot set URL");
@@ -116,8 +118,8 @@ namespace wm_vvo {
             int minutes = boost::lexical_cast<int, std::string>(std::string(what[3]));
             line.addResult(minutes, std::string(what[2]));
 
-//            for(int i = 0; i < what.size(); ++i)
-//                std::cout << "      $" << i << " = \"" << what[i] << "\"\n";
+          //  for(int i = 0; i < what.size(); ++i)
+          //      std::cout << "      $" << i << " = \"" << what[i] << "\"\n";
 
             boost::algorithm::erase_first(data, std::string(what[0]));
         }
@@ -133,5 +135,14 @@ namespace wm_vvo {
         {
             fillLine(*it, readed);
         }
+    }
+
+    void Collector::fillLineGroup(const LineGroup& l){
+        for (LineGroup::StationIterator it = l.firstStation();
+                it != l.lastStation(); it++)
+        {
+             fillStationResult(*it);
+        }
+
     }
 }

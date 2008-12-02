@@ -7,6 +7,7 @@ namespace wm_vvo {
 
     class Station;
     class Line;
+    class LineGroup;
     class Collector : private boost::noncopyable {
 	
 	public:
@@ -16,6 +17,7 @@ namespace wm_vvo {
 	
 	static  Collector& getCollector();
 	void fillStationResult(const Station& s);
+	void fillLineGroup(const LineGroup& l);
 
 	private:
 	  

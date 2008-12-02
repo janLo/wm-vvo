@@ -10,6 +10,9 @@ namespace wm_vvo {
     Station::Station(const std::string& name, const std::string& url_param)
 	    : name(name), url_param(url_param) 
 	{}
+    Station::Station(const std::string& name)
+	    : name(name), url_param(name) 
+	{}
     Station::~Station(){}
 
    void Station::addLine(const Line& l){
