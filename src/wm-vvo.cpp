@@ -3,6 +3,7 @@
 
 #include "line_group.h"
 #include "collector.h"
+#include "config_parser.h"
 
 
 
@@ -32,7 +33,7 @@ int main(int argc, char* argv[]){
 
   using namespace wm_vvo;
 
-  LineGroup line("Testgruppe");
+/*  LineGroup line("Testgruppe");
   Station s1("Wasaplatz", "wasaplatz");
   Station s2("Pohlandplatz", "pohlandplatz");
 
@@ -52,4 +53,8 @@ int main(int argc, char* argv[]){
 
 
   printLineGroup(line);
+*/
+  ConfigParser p;
+  p.parseConfig("vm-vvo.rc");
+
 }

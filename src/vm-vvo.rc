@@ -1,13 +1,39 @@
-Location: "Dresden"
-Interval: "20"
+begin linegroup
+    name  = "Testgruppe"
 
+    begin station 
+        name = "Pohlandplatz" 
+        urlparam = "pohlandplatz"
+        begin line
+            name = "4" 
+            dir = "Laubegast" 
+        end line
+        begin line
+            name ="4" 
+            dir = "Weinböhla"
+        end line
+        begin line
+            name = "61" 
+            regex = "E?61" 
+            dir = "*"
+        end line
+    end station
+    
+    begin station
+        name = "Wasaplatz" 
+        urlparam = "wasaplatz"
+        begin line
+            name = "75" 
+            dir = "Goppeln"
+        end line
+    end station
+    
+    begin station 
+        name = "Hauptbahnhof Nord" 
+        begin line 
+            name = "11" 
+            dir = "Zschertnitz"
+        end line 
+    end station
 
-LineGroup: "Testgruppe"
-Station: "Pohlandplatz" "pohlandplatz"
-Line: "4" Dir: "Laubegast" 
-Line: "4" Dir: "Weinböhla"
-Line: "61" "E?61" Dir: "*"
-Station: "Wasaplatz" "wasaplatz"
-Line: "75" Dir: "Goppeln"
-Station: "Hauptbahnhof Nord" 
-Line: "11" Dir: "Zschertnitz"
+end linegroup

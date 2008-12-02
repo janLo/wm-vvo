@@ -1,6 +1,6 @@
-OBJS=line.o wm-vvo.o line_group.o station.o collector.o
+OBJS=line.o wm-vvo.o line_group.o station.o collector.o config_parser.o
 BIN=wm-vvo
-CXXFLAGS+= -g -DBOOST_REGEX_MATCH_EXTRA -DBOOST_REGEX_USE_CPP_LOCALE
+CXXFLAGS+= -g -DBOOST_REGEX_MATCH_EXTRA
 LDFLAGS+=-lcurl -lboost_regex
 
 all: $(BIN)
@@ -10,3 +10,34 @@ $(BIN): $(OBJS)
 
 clean:
 	rm -rf *.o
+
+
+collector.o: collector.cpp \
+	collector.h \
+	station.h \
+	line.h
+config_parser.o: config_parser.cpp \
+	config_parser.h
+line.o: line.cpp \
+	line.h
+line_group.o: line_group.cpp \
+	line_group.h \
+	station.h \
+	line.h
+station.o: station.cpp \
+	station.h \
+	line.h
+wm-vvo.o: wm-vvo.cpp \
+	line_group.h \
+	station.h \
+	line.h \
+	collector.h \
+	config_parser.h
+collector.o: collector.h
+config_parser.o: config_parser.h
+line_group.o: line_group.h \
+	station.h \
+	line.h
+line.o: line.h
+station.o: station.h \
+	line.h
