@@ -39,12 +39,12 @@ int main(int argc, char* argv[]){
 
   using namespace wm_vvo;
 
-  ConfigParser p;
-  p.parseConfig("vm-vvo.rc");
+  ConfigParser& p = ConfigParser::getConfigParser("vm-vvo.rc");
 
   const std::vector<LineGroup>& groups = p.getLineGroups();
 
   Dockapp d(groups, &argc, &argv);
+  d.start();
 
   for (std::vector<LineGroup>::const_iterator it = groups.begin(); it != groups.end(); it++){
       Collector::getCollector().fillLineGroup(*it);

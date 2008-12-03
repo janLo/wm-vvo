@@ -30,6 +30,7 @@ namespace wm_vvo {
                     Result(int minutes, const std::string direction);
                     int getMinutes() const;
                     inline const std::string& getDirection() const {return direction;}
+                    bool isValid() const;
 
                 private:
                     std::string direction;
@@ -43,6 +44,9 @@ namespace wm_vvo {
             void addResult(int minutes, const std::string& direction) const;
             inline ResultIterator firstResult() const  {return results.begin();}
             inline ResultIterator lastResult() const {return results.end();}
+            const Result& getValidResult() const;
+
+            class NoValidDataError {};
 
         private:
 

@@ -18,14 +18,19 @@ collector.o: collector.cpp \
 	collector.h \
 	line_group.h \
 	station.h \
-	line.h
+	line.h \
+	config_parser.h
 config_parser.o: config_parser.cpp \
 	config_parser.h \
 	line.h \
 	station.h \
 	line_group.h
 dockapp.o: dockapp.cpp \
-	dockapp.h
+	dockapp.h \
+	line_group.h \
+	station.h \
+	line.h \
+	config_parser.h
 line.o: line.cpp \
 	line.h
 line_group.o: line_group.cpp \
@@ -40,7 +45,8 @@ wm-vvo.o: wm-vvo.cpp \
 	station.h \
 	line.h \
 	collector.h \
-	config_parser.h
+	config_parser.h \
+	dockapp.h
 collector.o: collector.h
 config_parser.o: config_parser.h
 dockapp.o: dockapp.h

@@ -13,6 +13,7 @@
 #include "line_group.h"
 #include "line.h"
 #include "station.h"
+#include "config_parser.h"
 
 
 namespace wm_vvo {
@@ -78,8 +79,8 @@ namespace wm_vvo {
             throw new std::runtime_error("cannot set Databuffer");
 
 
-        std::string ort("Dresden");
-        std::string verz("1");
+        std::string ort(ConfigParser::getConfigParser().getLocation());
+        std::string verz(boost::lexical_cast<std::string, int>(ConfigParser::getConfigParser().getDelay()));
         std::string url("http://widgets.vvo-online.de/abfahrtsmonitor/Abfahrten.do?ort=" + ort + "&hst=" + station + "&vz=" + verz); 
         boost::algorithm::replace_all(url, " ", "%20");
         code = ::curl_easy_setopt(curl, CURLOPT_URL, url.c_str());

@@ -52,6 +52,7 @@ namespace wm_vvo {
         std::string location;
         int interval;
         int delay;
+        int roate;
 
         void pushSymbol();
         void buildLine();
@@ -61,11 +62,29 @@ namespace wm_vvo {
 
         bool parsed;
 
-        public:
         ConfigParser();
+
+        static ConfigParser* instance;
         void parseConfig(const std::string filename);
 
+        public:
+
+        static ConfigParser& getConfigParser(){
+            if (0 == instance)
+                throw new std::runtime_error("no instance now!");
+            return *instance;
+        }
+
+        static ConfigParser& getConfigParser(const std::string filename){
+            if (0 == instance){
+                instance = new ConfigParser();
+                instance->parseConfig(filename);
+            }
+            return *instance;
+        }
+
         int getDelay() const;
+        int getRoate() const;
         int getInterval() const;
         const std::string& getLocation() const;
         const std::vector<LineGroup> getLineGroups() const;

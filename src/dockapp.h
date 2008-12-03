@@ -15,6 +15,7 @@ namespace wm_vvo {
         const std::vector<LineGroup>& groups;
         GaiApplet applet;
         int height;
+        int interval;
 
         gboolean updateGui();
         GdkPixbuf* bg;
@@ -27,7 +28,7 @@ namespace wm_vvo {
             int posy;
             int maxwidth;
             int fontsize; 
-            const std::string& font;
+            char * font;
             int red;
             int green;
             int blue;
@@ -50,16 +51,36 @@ namespace wm_vvo {
             void updatePosY(int posy);
             void draw();
             void setText(const std::string& s);
+            inline int getPosY() const {return posy;}
 
+        };
+
+        class LineString {
+            DrawString * line;
+            DrawString * dir;
+            DrawString * time;
+            int pos;
+
+            public:
+            LineString(const std::string& line, const std::string& dir, int time, int pos);
+            ~LineString();
+
+            inline void update(const std::string& dir, int time);
+            inline void draw();
+            inline void draw(int i);
         };
 
         std::vector<DrawString *> linegroup_strings;
         std::vector<DrawString *> station_strings;
-        std::vector<DrawString *> line_strings;
+        std::vector<LineString *> line_strings;
+
+        inline void drawLinegroup(const LineGroup& l);
 
         public: 
         Dockapp(const std::vector<LineGroup>& g, int *argc, char ***argv);
         ~Dockapp();
+
+        void start();
 
         friend gboolean updateHelper(gpointer data);
     };

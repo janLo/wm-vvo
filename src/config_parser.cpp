@@ -26,6 +26,9 @@
 
 
 namespace wm_vvo {
+
+    ConfigParser* ConfigParser::instance(0);
+
     ConfigParser::ConfigParser() :symbols(), scope(GLOBAL), parsed(false) {
         using namespace boost::spirit;
         using namespace boost::lambda;
@@ -134,10 +137,13 @@ namespace wm_vvo {
             throw new ParamNotFoundError("interval");
         if (0 == symbols[GLOBAL].count(std::string("delay")))
             throw new ParamNotFoundError("delay");
+        if (0 == symbols[GLOBAL].count(std::string("roate")))
+            throw new ParamNotFoundError("roate");
 
         location = symbols[GLOBAL]["location"];
         delay    = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["delay"]);
         interval = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["interval"]);
+        roate = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["roate"]);
 
     }
 
@@ -157,6 +163,11 @@ namespace wm_vvo {
         if (!parsed)
             throw new std::runtime_error("not yet parsed!");
         return delay;
+    }
+    int ConfigParser::getRoate() const {
+        if (!parsed)
+            throw new std::runtime_error("not yet parsed!");
+        return roate;
     }
     int ConfigParser::getInterval() const {
         if (!parsed)
