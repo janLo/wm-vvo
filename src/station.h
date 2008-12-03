@@ -32,6 +32,7 @@ namespace wm_vvo {
         inline const std::string& getUrlParam() const {return url_param;}
         inline LineIterator firstLine() const {return lines.begin();}
         inline LineIterator lastLine() const {return lines.end();}
+        inline int getLineCount() const {return lines.size(); }
 
         private:
 

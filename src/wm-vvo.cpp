@@ -2,11 +2,13 @@
 #include <string>
 #include <vector>
 
+
 #include "line_group.h"
 #include "station.h"
 #include "line.h"
 #include "collector.h"
 #include "config_parser.h"
+#include "dockapp.h"
 
 
 
@@ -32,6 +34,7 @@ void printLineGroup(const wm_vvo::LineGroup& l){
   }
 }
 
+
 int main(int argc, char* argv[]){
 
   using namespace wm_vvo;
@@ -41,12 +44,10 @@ int main(int argc, char* argv[]){
 
   const std::vector<LineGroup>& groups = p.getLineGroups();
 
+  Dockapp d(groups, &argc, &argv);
+
   for (std::vector<LineGroup>::const_iterator it = groups.begin(); it != groups.end(); it++){
       Collector::getCollector().fillLineGroup(*it);
       printLineGroup(*it);
-
   }
-
-
-
 }

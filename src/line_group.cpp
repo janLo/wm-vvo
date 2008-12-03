@@ -41,5 +41,8 @@ namespace wm_vvo {
     LineGroup::StationIterator LineGroup::lastStation() const {
         return stations.end();
     }
+    int LineGroup::getStationCount() const {
+        return stations.size();
+    }
 
 }

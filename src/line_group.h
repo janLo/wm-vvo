@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <boost/utility.hpp>
-#include <boost/algorithm/string.hpp>
 
 #include "station.h"
 
@@ -30,6 +29,7 @@ namespace wm_vvo {
 
         StationIterator firstStation() const;
         StationIterator lastStation() const;
+        int getStationCount() const;
 
         private:
 

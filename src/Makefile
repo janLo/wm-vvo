@@ -1,7 +1,9 @@
-OBJS=line.o wm-vvo.o line_group.o station.o collector.o config_parser.o
+OBJS=line.o wm-vvo.o line_group.o station.o collector.o config_parser.o dockapp.o
 BIN=wm-vvo
 CXXFLAGS+= -g -DBOOST_REGEX_MATCH_EXTRA
-LDFLAGS+=-lcurl -lboost_regex
+CXXFLAGS+=`pkg-config --cflags gai`
+LDFLAGS+=-L ../wmapp-0.0.4.3 -lcurl -lboost_regex 
+LDFLAGS+=`pkg-config --libs gai`
 
 all: $(BIN)
 
@@ -22,6 +24,8 @@ config_parser.o: config_parser.cpp \
 	line.h \
 	station.h \
 	line_group.h
+dockapp.o: dockapp.cpp \
+	dockapp.h
 line.o: line.cpp \
 	line.h
 line_group.o: line_group.cpp \
@@ -39,6 +43,7 @@ wm-vvo.o: wm-vvo.cpp \
 	config_parser.h
 collector.o: collector.h
 config_parser.o: config_parser.h
+dockapp.o: dockapp.h
 line_group.o: line_group.h \
 	station.h \
 	line.h
