@@ -1,6 +1,8 @@
 OBJS=line.o wm-vvo.o line_group.o station.o collector.o config_parser.o dockapp.o
 BIN=wm-vvo
-CXXFLAGS+= -g -DBOOST_REGEX_MATCH_EXTRA
+CXXFLAGS+= -DBOOST_REGEX_MATCH_EXTRA
+CXXFLAGS+= -O3
+#CXXFLAGS+= -g
 CXXFLAGS+=`pkg-config --cflags gai`
 LDFLAGS+=-L ../wmapp-0.0.4.3 -lcurl -lboost_regex 
 LDFLAGS+=`pkg-config --libs gai`

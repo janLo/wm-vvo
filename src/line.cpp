@@ -15,6 +15,7 @@ namespace wm_vvo {
     void Line::clearResults() const {
         results.clear();
     }
+
     void Line::addResult(int minutes, const std::string& direction) const {
         results.push_back(Line::Result(minutes, direction));
         std::sort(results.begin(), results.end());

@@ -38,7 +38,6 @@ namespace wm_vvo {
 
         height = (8*line_num) + (13*station_num) + (16*linegroup_num) + 5 ;
         
-
         applet.name        = "wm-vvo";
         applet.version     = "0.1";
         applet.nice_name   = "Wm - Vvo";
@@ -48,26 +47,22 @@ namespace wm_vvo {
         applet.icon        = "";
         applet.image_path  = ".";
 
-        std::cout << height << std::endl;
-
         ::gai_init2(&applet, argc, argv);
         ::gai_background_set(64,height,64,TRUE);
 
-        bg = gai_load_image("bg.xpm");
-
-        gai_signal_on_update(updateHelper,200,this);
+        gai_signal_on_update(updateHelper,ConfigParser::getConfigParser().getRefresh(),this);
         
         interval = ConfigParser::getConfigParser().getInterval();
 
         int pos = 5;
         for (std::vector<LineGroup>::const_iterator it = groups.begin(); it != groups.end(); it++){
             const LineGroup& l = *it;
-            linegroup_strings.push_back(new DrawString(5,pos, 57, l.getHeadline(), 5, "sans", 230, 230, 60, GAI_TEXT_BOLD));
+            linegroup_strings.push_back(new DrawString(4,pos, 57, l.getHeadline(), 5, "sans", 230, 230, 60, GAI_TEXT_BOLD));
             pos += 11;
             Collector::getCollector().fillLineGroup(*it);
             for (std::vector<Station>::const_iterator sit = l.firstStation(); sit != l.lastStation(); sit++){
                 const Station& s = *sit;
-                station_strings.push_back(new DrawString(7,pos, 55, s.getName(), 5, "sans", 200, 200, 50, GAI_TEXT_NORMAL));
+                station_strings.push_back(new DrawString(5,pos, 50, s.getName(), 5, "sans", 200, 200, 50, GAI_TEXT_NORMAL));
                 pos += 9;
                 for (std::vector<Line>::const_iterator lit = s.firstLine(); lit != s.lastLine(); lit++) {
                     const Line& l = *lit;
@@ -81,7 +76,6 @@ namespace wm_vvo {
     }
 
     Dockapp::~Dockapp() {
-      free(bg); 
     }
 
     inline void Dockapp::drawLinegroup(const LineGroup& l){
@@ -93,26 +87,28 @@ namespace wm_vvo {
     }
 
 
-    gboolean Dockapp::updateGui(){
+    void Dockapp::updateGui(){
 
-        static time_t last_update;
+        static time_t last_data_update;
+        static time_t last_image_update;
 
-        DrawString* ss;
         if(first){
-            int bg_height = ::gdk_pixbuf_get_height(bg);
+            GdkPixbuf * tmp = ::gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, 64, height);
+            ::gdk_pixbuf_fill(tmp, 0x090209FF);
 
-            int num = height/bg_height;
 
-            for (int i = 0; i < num; i++){
-                ::gai_draw_bg(bg, 0,0, 60, bg_height, 1, i*bg_height);
-            }
+            ::gai_draw_bg(tmp, 0,0, 60, height-3, 1, 1);
 
+            ::gdk_pixbuf_unref(tmp);
             ::gai_draw_update_bg();
-            last_update = ::time(0);
+            last_data_update = ::time(0) - interval - 1;
+            last_image_update = ::time(0) - interval - 1;
         }
 
         time_t now = time(0);
-        int div = now - last_update;
+        int div1 = now - last_data_update;
+        int div2 = now - last_image_update;
+
 
         int pos = 3;
         int lg_count = 0;
@@ -122,8 +118,10 @@ namespace wm_vvo {
         for (std::vector<LineGroup>::const_iterator it = groups.begin(); it != groups.end(); it++){
             const LineGroup& l = *it;
 
-            if (div > interval)
+            if (div1 > interval){
                 Collector::getCollector().fillLineGroup(*it);
+                last_data_update = ::time(0);
+            }
 
             linegroup_strings[lg_count]->draw();
             for (std::vector<Station>::const_iterator sit = l.firstStation(); sit != l.lastStation(); sit++){
@@ -134,12 +132,15 @@ namespace wm_vvo {
                     const Line& l = *lit;
                     try {
                         const Line::Result& r = l.getValidResult();
-                        if (div > 30 || first)
-                           line_strings[li_count]->update(r.getDirection(), r.getMinutes());
+                        if (div2 > 30 || first){
+                            line_strings[li_count]->update(r.getDirection(), r.getMinutes());
+                            last_image_update = ::time(0);
+                        }
                         line_strings[li_count]->draw(pos);
                         pos += 8;
                     } catch (Line::NoValidDataError e) {
-                        std::cout << "No valid value for Line " << l.getName() << std::endl;
+                        if (div2 > 30 || first)
+                            std::cout << "No valid value for Line " << l.getName() << std::endl;
                     }
                     li_count++;
                 }
@@ -149,15 +150,13 @@ namespace wm_vvo {
         }
 
         ::gai_draw_update();
-            first = false;
-        last_update = ::time(0);
-        return TRUE;
+        first = false;
     }
 
 
 
     Dockapp::DrawString::DrawString(int posx, int posy, int maxwidth, const std::string& text, int fontsize, const std::string& newfont, int r, int g, int b, int feature)
-        :posx(posx), posy(posy), maxwidth(maxwidth), text(text), fontsize(fontsize), font(0), red(r), green(g), blue(b), feature(feature), roate(false), roate_state(0), pixmap(0)
+        :posx(posx), posy(posy), maxwidth(maxwidth), text(text), fontsize(fontsize), font(0), red(r), green(g), blue(b), feature(feature), rotate(false), rotate_state(0), pixmap(0)
     {
         font = new char[newfont.size() + 1];
         ::strcpy(font, newfont.c_str());
@@ -171,24 +170,24 @@ namespace wm_vvo {
         delete[] font;
     }
 
-    void Dockapp::DrawString::updatePosY(int newposy) {
+    inline void Dockapp::DrawString::updatePosY(int newposy) {
         posy = newposy;
     }
 
-    void Dockapp::DrawString::draw(){
-        if(roate){
-            if(roate_state <= pixmap_length + 8) {
-                roate_state ++;
+    inline void Dockapp::DrawString::draw(){
+        if(rotate){
+            if(rotate_state <= pixmap_length + 8) {
+                rotate_state ++;
             } else {
-                roate_state = 1;
+                rotate_state = 1;
             }
-            ::gai_draw(pixmap, roate_state, 0, maxwidth, pixmap_height, posx , posy);
+            ::gai_draw(pixmap, rotate_state, 0, maxwidth, pixmap_height, posx , posy);
         } else {
             ::gai_draw(pixmap, 0, 0, pixmap_length, pixmap_height, posx, posy);
         }
     }
 
-    void Dockapp::DrawString::setText(const std::string& new_text) {
+    inline void Dockapp::DrawString::setText(const std::string& new_text) {
         text = new_text;
         if (0 != pixmap)
             gdk_pixbuf_unref(pixmap);
@@ -199,9 +198,9 @@ namespace wm_vvo {
     void Dockapp::DrawString::calcRoate(){
         pixmap_length = ::gdk_pixbuf_get_width(pixmap);
         pixmap_height = ::gdk_pixbuf_get_height(pixmap);
-        roate = (maxwidth < pixmap_length) && (1 == ConfigParser::getConfigParser().getRoate());
-        roate_state = 0;
-        if (roate) {
+        rotate = (maxwidth < pixmap_length) && (1 == ConfigParser::getConfigParser().getRoate());
+        rotate_state = 0;
+        if (rotate) {
             GdkPixbuf * tmp = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, pixmap_length*2 + 8, pixmap_height);
             gdk_pixbuf_fill(tmp, 0x00000000);
             gdk_pixbuf_copy_area(pixmap, 0, 0, pixmap_length, pixmap_height, tmp, 0, 0);

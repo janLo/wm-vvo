@@ -56,7 +56,7 @@ namespace wm_vvo {
         return c;
     }
 
-    const std::string Collector::fetchData(const std::string& station){
+    inline const std::string Collector::fetchData(const std::string& station){
         CURLcode code;
         static char errorBuffer[CURL_ERROR_SIZE];
 
@@ -101,7 +101,7 @@ namespace wm_vvo {
         return readed;
     }
 
-    void Collector::fillLine(const Line& line,  std::string data){
+    inline void Collector::fillLine(const Line& line,  std::string data){
 
         std::string regex("\\[\"(" + line.getRegexp() + ")\",\"(" + line.getDirRegexp() + ")\",\"([\\d]+)\"\\]");
         boost::u32regex e(boost::make_u32regex(regex));
@@ -121,7 +121,7 @@ namespace wm_vvo {
         }
     }
 
-    void Collector::fillStationResult(const Station& s)
+    inline void Collector::fillStationResult(const Station& s)
     {
 
         std::string readed(fetchData(s.getUrlParam()));

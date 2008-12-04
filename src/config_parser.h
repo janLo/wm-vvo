@@ -53,6 +53,7 @@ namespace wm_vvo {
         int interval;
         int delay;
         int roate;
+        int refresh;
 
         void pushSymbol();
         void buildLine();
@@ -85,6 +86,7 @@ namespace wm_vvo {
 
         int getDelay() const;
         int getRoate() const;
+        int getRefresh() const;
         int getInterval() const;
         const std::string& getLocation() const;
         const std::vector<LineGroup> getLineGroups() const;

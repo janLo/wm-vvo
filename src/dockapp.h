@@ -17,8 +17,6 @@ namespace wm_vvo {
         int height;
         int interval;
 
-        gboolean updateGui();
-        GdkPixbuf* bg;
 
         bool first;
 
@@ -34,8 +32,8 @@ namespace wm_vvo {
             int blue;
             int feature;
 
-            bool roate;
-            int roate_state;
+            bool rotate;
+            int rotate_state;
 
             GdkPixbuf* pixmap;
             int pixmap_length;
@@ -48,9 +46,9 @@ namespace wm_vvo {
             DrawString(int posx, int posy, int maxwidth, const std::string& text, int fontsize, const std::string& font, int r, int g, int b, int feature);
             ~DrawString();
 
-            void updatePosY(int posy);
-            void draw();
-            void setText(const std::string& s);
+            inline void updatePosY(int posy);
+            inline void draw();
+            inline void setText(const std::string& s);
             inline int getPosY() const {return posy;}
 
         };
@@ -81,6 +79,7 @@ namespace wm_vvo {
         ~Dockapp();
 
         void start();
+        void updateGui();
 
         friend gboolean updateHelper(gpointer data);
     };

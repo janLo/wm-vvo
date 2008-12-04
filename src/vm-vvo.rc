@@ -1,7 +1,8 @@
 location = "dresden"
 delay = "1"
-interval = "5"
-roate = "1"
+interval = "60"
+roate = "0"
+refresh = "500"
 
 
 begin linegroup

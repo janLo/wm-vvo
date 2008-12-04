@@ -139,11 +139,14 @@ namespace wm_vvo {
             throw new ParamNotFoundError("delay");
         if (0 == symbols[GLOBAL].count(std::string("roate")))
             throw new ParamNotFoundError("roate");
+        if (0 == symbols[GLOBAL].count(std::string("refresh")))
+            throw new ParamNotFoundError("refresh");
 
         location = symbols[GLOBAL]["location"];
         delay    = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["delay"]);
         interval = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["interval"]);
-        roate = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["roate"]);
+        roate    = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["roate"]);
+        refresh  = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["refresh"]);
 
     }
 
@@ -168,6 +171,11 @@ namespace wm_vvo {
         if (!parsed)
             throw new std::runtime_error("not yet parsed!");
         return roate;
+    }
+    int ConfigParser::getRefresh() const {
+        if (!parsed)
+            throw new std::runtime_error("not yet parsed!");
+        return refresh;
     }
     int ConfigParser::getInterval() const {
         if (!parsed)

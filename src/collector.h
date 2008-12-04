@@ -19,19 +19,17 @@ namespace wm_vvo {
             ~Collector();
 
             static  Collector& getCollector();
-            void fillStationResult(const Station& s);
             void fillLineGroup(const LineGroup& l);
 
         private:
 
-
             CURL *curl;
             static char errorBuffer[CURL_ERROR_SIZE];
-
             std::vector<std::pair<std::string, std::string> > html_preplaces;
 
-            const std::string fetchData(const std::string& station);
-            void fillLine(const Line& line, std::string data);
+            inline void fillStationResult(const Station& s);
+            inline const std::string fetchData(const std::string& station);
+            inline void fillLine(const Line& line, std::string data);
 
     };
 
