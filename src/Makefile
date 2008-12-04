@@ -1,5 +1,6 @@
 OBJS=line.o wm-vvo.o line_group.o station.o collector.o config_parser.o dockapp.o
 BIN=wm-vvo
+BINDIR=/usr/bin/
 CXXFLAGS+= -DBOOST_REGEX_MATCH_EXTRA
 CXXFLAGS+= -O3
 #CXXFLAGS+= -g
