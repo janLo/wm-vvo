@@ -62,21 +62,21 @@ namespace wm_vvo {
 
         code = ::curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errorBuffer);
         if (code != CURLE_OK)
-            throw new std::runtime_error("cannot set ErrorBuffer");
+            throw std::runtime_error("cannot set ErrorBuffer");
 
         code = ::curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         if (code != CURLE_OK)
-            throw new std::runtime_error("cannot set Redirect Stuff");
+            throw std::runtime_error("cannot set Redirect Stuff");
 
         code = ::curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
         if (code != CURLE_OK)
-            throw new std::runtime_error("cannot set WriterFunc");
+            throw std::runtime_error("cannot set WriterFunc");
 
 
         std::string readed;
         code = ::curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readed);
         if (code != CURLE_OK)
-            throw new std::runtime_error("cannot set Databuffer");
+            throw std::runtime_error("cannot set Databuffer");
 
 
         std::string ort(ConfigParser::getConfigParser().getLocation());
@@ -85,11 +85,11 @@ namespace wm_vvo {
         boost::algorithm::replace_all(url, " ", "%20");
         code = ::curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         if (code != CURLE_OK)
-            throw new std::runtime_error("cannot set URL");
+            throw std::runtime_error("cannot set URL");
 
         code = ::curl_easy_perform(curl);
         if (code != CURLE_OK)
-            throw new std::runtime_error("cannot perform Request");
+            throw std::runtime_error("cannot perform Request");
 
 
 

@@ -80,9 +80,9 @@ namespace wm_vvo {
 
     void ConfigParser::buildLine(){
         if (0 == symbols[LINE].count(std::string("name")))
-            throw new ParamNotFoundError("Line: name");
+            throw ParamNotFoundError("Line: name");
         if (0 == symbols[LINE].count(std::string("dir")))
-            throw new ParamNotFoundError("Line: dir");
+            throw ParamNotFoundError("Line: dir");
 
         if (0 == symbols[LINE].count(std::string("regex")))
             line_tmp.push_back(Line(symbols[LINE]["name"], symbols[LINE]["dir"]));
@@ -95,7 +95,7 @@ namespace wm_vvo {
 
     void ConfigParser::buildStation(){
         if (0 == symbols[STATION].count(std::string("name")))
-            throw new ParamNotFoundError("Station: name");
+            throw ParamNotFoundError("Station: name");
 
         if (0 == symbols[STATION].count(std::string("urlparam")))
             station_tmp.push_back(Station(symbols[STATION]["name"]));
@@ -115,7 +115,7 @@ namespace wm_vvo {
 
     void ConfigParser::buildLineGroup(){
         if (0 == symbols[LINEGROUP].count(std::string("name")))
-            throw new ParamNotFoundError("Linegroup: name");
+            throw ParamNotFoundError("Linegroup: name");
 
         LineGroup tmp(symbols[LINEGROUP]["name"]);
 
@@ -132,20 +132,20 @@ namespace wm_vvo {
     void ConfigParser::setGlobalCfg(){
 
         if (0 == symbols[GLOBAL].count(std::string("location")))
-            throw new ParamNotFoundError("location");
+            throw ParamNotFoundError("location");
         if (0 == symbols[GLOBAL].count(std::string("interval")))
-            throw new ParamNotFoundError("interval");
+            throw ParamNotFoundError("interval");
         if (0 == symbols[GLOBAL].count(std::string("delay")))
-            throw new ParamNotFoundError("delay");
-        if (0 == symbols[GLOBAL].count(std::string("roate")))
-            throw new ParamNotFoundError("roate");
+            throw ParamNotFoundError("delay");
+        if (0 == symbols[GLOBAL].count(std::string("rotate")))
+            throw ParamNotFoundError("rotate");
         if (0 == symbols[GLOBAL].count(std::string("refresh")))
-            throw new ParamNotFoundError("refresh");
+            throw ParamNotFoundError("refresh");
 
         location = symbols[GLOBAL]["location"];
         delay    = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["delay"]);
         interval = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["interval"]);
-        roate    = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["roate"]);
+        rotate    = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["rotate"]);
         refresh  = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["refresh"]);
 
     }
@@ -153,6 +153,9 @@ namespace wm_vvo {
     void ConfigParser::parseConfig(const std::string filename){
 
         std::fstream file(filename.c_str(), std::ios_base::in);
+
+        if (!file.is_open())
+            throw std::runtime_error("Could not open configfile!");
 
         std::string tmp, result;
         while ( getline(file, tmp) ) result.append(tmp );
@@ -164,32 +167,32 @@ namespace wm_vvo {
 
     int ConfigParser::getDelay() const {
         if (!parsed)
-            throw new std::runtime_error("not yet parsed!");
+            throw std::runtime_error("not yet parsed!");
         return delay;
     }
     int ConfigParser::getRoate() const {
         if (!parsed)
-            throw new std::runtime_error("not yet parsed!");
-        return roate;
+            throw std::runtime_error("not yet parsed!");
+        return rotate;
     }
     int ConfigParser::getRefresh() const {
         if (!parsed)
-            throw new std::runtime_error("not yet parsed!");
+            throw std::runtime_error("not yet parsed!");
         return refresh;
     }
     int ConfigParser::getInterval() const {
         if (!parsed)
-            throw new std::runtime_error("not yet parsed!");
+            throw std::runtime_error("not yet parsed!");
         return interval;
     }
     const std::string& ConfigParser::getLocation() const {
         if (!parsed)
-            throw new std::runtime_error("not yet parsed!");
+            throw std::runtime_error("not yet parsed!");
         return location;
     }
     const std::vector<LineGroup> ConfigParser::getLineGroups() const {
         if (!parsed)
-            throw new std::runtime_error("not yet parsed!");
+            throw std::runtime_error("not yet parsed!");
         return linegroup_tmp;
     }
 }

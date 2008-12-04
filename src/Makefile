@@ -32,7 +32,8 @@ dockapp.o: dockapp.cpp \
 	line_group.h \
 	station.h \
 	line.h \
-	config_parser.h
+	config_parser.h \
+	collector.h
 line.o: line.cpp \
 	line.h
 line_group.o: line_group.cpp \

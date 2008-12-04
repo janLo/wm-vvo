@@ -27,7 +27,7 @@ namespace wm_vvo {
     const Station& LineGroup::getStation(const std::string& name) const {
         LineGroup::StationIterator it = findStation(name);
         if (it == stations.end())
-            throw new std::runtime_error("No Station found!");
+            throw std::runtime_error("No Station found!");
         return *it;
     }
 

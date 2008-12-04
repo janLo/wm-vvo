@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 
+#include <unistd.h>
 
 #include "line_group.h"
 #include "station.h"
@@ -11,43 +12,66 @@
 #include "dockapp.h"
 
 
+/*
+   void printLineGroup(const wm_vvo::LineGroup& l){
+   using namespace wm_vvo;
+   for (LineGroup::StationIterator it = l.firstStation(); 
+   it != l.lastStation(); it++)
+   {
+   const Station& s = *it;
+   std::cout << "Station: " << s.getName() << std::endl;
+   for (Station::LineIterator lit = s.firstLine();
+   lit != s.lastLine(); lit++)
+   {
+   const Line& l = *lit;
+   std::cout << "  Line " << l.getName() << ":" << std::endl;
+   for (Line::ResultIterator rit = l.firstResult();
+   rit != l.lastResult(); rit++)
+   {
+   std::cout << "    " << (*rit).getMinutes() << "  " << (*rit).getDirection() << std::endl;
 
-void printLineGroup(const wm_vvo::LineGroup& l){
-  using namespace wm_vvo;
-  for (LineGroup::StationIterator it = l.firstStation(); 
-      it != l.lastStation(); it++)
-  {
-        const Station& s = *it;
-        std::cout << "Station: " << s.getName() << std::endl;
-        for (Station::LineIterator lit = s.firstLine();
-                lit != s.lastLine(); lit++)
-        {
-            const Line& l = *lit;
-            std::cout << "  Line " << l.getName() << ":" << std::endl;
-            for (Line::ResultIterator rit = l.firstResult();
-                    rit != l.lastResult(); rit++)
-            {
-                std::cout << "    " << (*rit).getMinutes() << "  " << (*rit).getDirection() << std::endl;
-
-            }
-        }
-  }
-}
-
+   }
+   }
+   }
+   }
+   */
 
 int main(int argc, char* argv[]){
 
-  using namespace wm_vvo;
+    using namespace wm_vvo;
 
-  ConfigParser& p = ConfigParser::getConfigParser("vm-vvo.rc");
+    try {
+        std::string filename;
 
-  const std::vector<LineGroup>& groups = p.getLineGroups();
+        char c;
+        while ((c = getopt (argc, argv, "c:")) != -1){
+            if (c == 'c') {
+                filename = optarg;
+                break;
+            }
+        }
 
-  Dockapp d(groups, &argc, &argv);
-  d.start();
+        if (0 == filename.size()) {
+            filename = "~/.wm-vvo.rc";
+        }
 
-  for (std::vector<LineGroup>::const_iterator it = groups.begin(); it != groups.end(); it++){
-      Collector::getCollector().fillLineGroup(*it);
-      printLineGroup(*it);
-  }
+        ConfigParser& p = ConfigParser::getConfigParser(filename);
+
+        const std::vector<LineGroup>& groups = p.getLineGroups();
+
+        Dockapp d(groups, &argc, &argv);
+        d.start();
+
+    } catch (std::runtime_error e){
+        std::cerr << "Error:" << std::endl;
+        std::cerr << "  " << e.what() << std::endl;
+        std::cerr << "Abort!" << std::endl;
+        abort();
+    }
+    /*
+       for (std::vector<LineGroup>::const_iterator it = groups.begin(); it != groups.end(); it++){
+       Collector::getCollector().fillLineGroup(*it);
+       printLineGroup(*it);
+       }
+       */
 }

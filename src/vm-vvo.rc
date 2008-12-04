@@ -1,7 +1,7 @@
 location = "dresden"
 delay = "1"
 interval = "60"
-roate = "0"
+rotate = "0"
 refresh = "500"
 
 

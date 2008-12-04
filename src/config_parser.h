@@ -52,7 +52,7 @@ namespace wm_vvo {
         std::string location;
         int interval;
         int delay;
-        int roate;
+        int rotate;
         int refresh;
 
         void pushSymbol();
@@ -72,7 +72,7 @@ namespace wm_vvo {
 
         static ConfigParser& getConfigParser(){
             if (0 == instance)
-                throw new std::runtime_error("no instance now!");
+                throw std::runtime_error("no instance now!");
             return *instance;
         }
 
@@ -94,7 +94,7 @@ namespace wm_vvo {
         class ParamNotFoundError : public std::runtime_error { 
             public:
                 ParamNotFoundError(const std::string& s)
-                    : std::runtime_error(s) 
+                    : std::runtime_error("Param not found: " + s) 
                 {}
         };
     };

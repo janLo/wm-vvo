@@ -28,7 +28,7 @@ namespace wm_vvo {
     const Line& Station::getLine(const std::string& name) const {
         Station::LineIterator it = findLine(name);
         if (it == lines.end())
-            throw new std::runtime_error("No Line found!");
+            throw std::runtime_error("No Line found!");
         return *it;
     }
 
