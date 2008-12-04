@@ -1,0 +1,9 @@
+wm-vvo for Debian
+-----------------
+
+You must provide a Config in ~/.wm-vvo or any
+other location, given with the -c option!
+
+An example will be delivered with this software.
+
+ -- Jan Losinski <losinski@wh2.tu-dresden.de>  Thu, 04 Dec 2008 10:51:22 +0100

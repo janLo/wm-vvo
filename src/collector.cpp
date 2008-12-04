@@ -87,6 +87,13 @@ namespace wm_vvo {
         if (code != CURLE_OK)
             throw std::runtime_error("cannot set URL");
 
+        std::string proxy(ConfigParser::getConfigParser().getProxy());
+        if(proxy.size() > 0){
+            code = ::curl_easy_setopt(curl, CURLOPT_PROXY, proxy.c_str());
+            if (code != CURLE_OK)
+                throw std::runtime_error("cannot set Proxy");
+        }
+
         code = ::curl_easy_perform(curl);
         if (code != CURLE_OK)
             throw std::runtime_error("cannot perform Request");

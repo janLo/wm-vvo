@@ -38,9 +38,9 @@ namespace wm_vvo {
         symbols.push_back(std::map<std::string, std::string>());
         symbols.push_back(std::map<std::string, std::string>());
 
-        assignment       = *space_p >> regex_p("[a-z]+")[assign_a(key)] >> *space_p >> 
+        assignment       = *space_p >> regex_p("[a-z]*")[assign_a(key)] >> *space_p >> 
                            ch_p('=') >> *space_p >> ch_p('"') >> 
-                           regex_p("[\\w\\d._\\*\\söäüß?\\]\\[\\\\+-]+")[assign_a(val)] >> 
+                           regex_p("[^\"]+")[assign_a(val)] >> 
                            ch_p('"')[bind(&ConfigParser::pushSymbol, this)] >> 
                            *(space_p | eol_p);
 
@@ -148,6 +148,11 @@ namespace wm_vvo {
         rotate    = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["rotate"]);
         refresh  = boost::lexical_cast<int,std::string>(symbols[GLOBAL]["refresh"]);
 
+        if (0 != symbols[GLOBAL].count(std::string("proxy"))){
+            if (0 < symbols[GLOBAL]["proxy"].size()){
+                proxy = symbols[GLOBAL]["proxy"];
+            }
+        }
     }
 
     void ConfigParser::parseConfig(const std::string filename){
@@ -189,6 +194,11 @@ namespace wm_vvo {
         if (!parsed)
             throw std::runtime_error("not yet parsed!");
         return location;
+    }
+    const std::string& ConfigParser::getProxy() const {
+        if (!parsed)
+            throw std::runtime_error("not yet parsed!");
+        return proxy;
     }
     const std::vector<LineGroup> ConfigParser::getLineGroups() const {
         if (!parsed)

@@ -1,0 +1,58 @@
+location = "dresden"
+delay = "1"
+interval = "60"
+rotate = "1"
+refresh = "300"
+
+
+begin linegroup
+    name  = "Testgruppe 1"
+
+    begin station 
+        name = "Pohlandplatz" 
+        urlparam = "pohlandplatz"
+        begin line
+            name = "4" 
+            dir = "Laubegast" 
+        end line
+        begin line
+            name ="4" 
+            dir = ".*"
+        end line
+        begin line
+            name = "61" 
+            regex = "E?61" 
+            dir = "[\w\d _.-]+"
+        end line
+    end station
+    
+    begin station
+        name = "Wasaplatz" 
+        urlparam = "wasaplatz"
+        begin line
+            name = "75" 
+            regex = ".*75.*"
+            dir = ".*"
+        end line
+    end station
+    
+    begin station 
+        name = "Hauptbahnhof Nord" 
+        begin line 
+            name = "11" 
+            dir = ".*"
+        end line 
+    end station
+
+end linegroup
+
+begin linegroup
+    name = "Testgruppe 2"
+    begin station
+        name = "Reichenbachstrasse"
+        begin line
+	    name = "72"
+	    dir = ".*"
+	end line
+    end station
+end linegroup

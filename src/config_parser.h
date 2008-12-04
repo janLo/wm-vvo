@@ -50,6 +50,7 @@ namespace wm_vvo {
         std::vector<Line> line_tmp;
 
         std::string location;
+        std::string proxy;
         int interval;
         int delay;
         int rotate;
@@ -89,6 +90,7 @@ namespace wm_vvo {
         int getRefresh() const;
         int getInterval() const;
         const std::string& getLocation() const;
+        const std::string& getProxy() const;
         const std::vector<LineGroup> getLineGroups() const;
 
         class ParamNotFoundError : public std::runtime_error { 

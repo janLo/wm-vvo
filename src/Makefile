@@ -5,7 +5,8 @@ CXXFLAGS+= -O3
 #CXXFLAGS+= -g
 CXXFLAGS+=`pkg-config --cflags gai`
 LDFLAGS+=-L ../wmapp-0.0.4.3 -lcurl -lboost_regex 
-LDFLAGS+=`pkg-config --libs gai`
+LDFLAGS+=-L/usr/lib/lib -lgai -lgdk_pixbuf-2.0 -lm
+LDFLAGS+=-O3
 
 all: $(BIN)
 
@@ -14,6 +15,10 @@ $(BIN): $(OBJS)
 
 clean:
 	rm -rf *.o
+
+install:
+	install -m755 $(BIN) $(DESTDIR)$(BINDIR)
+
 
 
 collector.o: collector.cpp \
@@ -59,3 +64,7 @@ line_group.o: line_group.h \
 line.o: line.h
 station.o: station.h \
 	line.h
+
+
+
+.PHONY: all clean install

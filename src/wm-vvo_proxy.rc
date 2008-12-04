@@ -1,8 +1,9 @@
 location = "dresden"
 delay = "1"
 interval = "60"
-rotate = "0"
-refresh = "500"
+rotate = "1"
+refresh = "100"
+proxy = "www-cache.htw-dresden.de:3128"
 
 
 begin linegroup

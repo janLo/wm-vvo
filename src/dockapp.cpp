@@ -201,11 +201,11 @@ namespace wm_vvo {
         rotate = (maxwidth < pixmap_length) && (1 == ConfigParser::getConfigParser().getRoate());
         rotate_state = 0;
         if (rotate) {
-            GdkPixbuf * tmp = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, pixmap_length*2 + 8, pixmap_height);
-            gdk_pixbuf_fill(tmp, 0x00000000);
-            gdk_pixbuf_copy_area(pixmap, 0, 0, pixmap_length, pixmap_height, tmp, 0, 0);
-            gdk_pixbuf_copy_area(pixmap, 0, 0, pixmap_length, pixmap_height, tmp, pixmap_length+8, 0);
-            gdk_pixbuf_unref(pixmap);
+            GdkPixbuf * tmp = ::gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, pixmap_length*2 + 8, pixmap_height);
+            ::gdk_pixbuf_fill(tmp, 0x00000000);
+            ::gdk_pixbuf_copy_area(pixmap, 0, 0, pixmap_length, pixmap_height, tmp, 0, 0);
+            ::gdk_pixbuf_copy_area(pixmap, 0, 0, pixmap_length, pixmap_height, tmp, pixmap_length+8, 0);
+            ::gdk_pixbuf_unref(pixmap);
             pixmap = tmp;
         } else {
             pixmap_length = (pixmap_length <= maxwidth ? pixmap_length : maxwidth);

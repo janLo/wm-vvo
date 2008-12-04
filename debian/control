@@ -1,0 +1,14 @@
+Source: wm-vvo
+Section: x11
+Priority: optional
+Maintainer: Jan Losinski <losinski@wh2.tu-dresden.de>
+Build-Depends: debhelper (>= 7), libboost1.35-dev, libboost-regex1.35-dev, libgai-dev, libcurl4-gnutls-dev
+Standards-Version: 3.7.3
+Homepage: <insert the upstream URL, if relevant>
+
+Package: wm-vvo
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Dockapp to fetch and fisplay bus schedules
+ fetches schedule data from the VVO (www.vvo-online.de), formats
+ it and displays it in a dockapp.
