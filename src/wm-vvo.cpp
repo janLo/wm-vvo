@@ -3,6 +3,7 @@
 #include <vector>
 
 #include <unistd.h>
+#include <stdlib.h>
 
 #include "line_group.h"
 #include "station.h"
@@ -41,7 +42,9 @@ int main(int argc, char* argv[]){
     using namespace wm_vvo;
 
     try {
-        std::string filename;
+        
+        char * home = getenv("HOME");
+        std::string filename(std::string(home) + "/.wm-vvo.rc");
 
         char c;
         while ((c = getopt (argc, argv, "c:")) != -1){
@@ -49,10 +52,6 @@ int main(int argc, char* argv[]){
                 filename = optarg;
                 break;
             }
-        }
-
-        if (0 == filename.size()) {
-            filename = "~/.wm-vvo.rc";
         }
 
         ConfigParser& p = ConfigParser::getConfigParser(filename);
