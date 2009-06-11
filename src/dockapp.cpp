@@ -10,7 +10,6 @@
 #include "station.h"
 #include "line.h"
 #include "config_parser.h"
-#include "collector.h"
 
 namespace wm_vvo {
 
@@ -59,7 +58,9 @@ namespace wm_vvo {
             const LineGroup& l = *it;
             linegroup_strings.push_back(new DrawString(4,pos, 57, l.getHeadline(), 5, "sans", 230, 230, 60, GAI_TEXT_BOLD));
             pos += 11;
-            Collector::getCollector().fillLineGroup(*it);
+
+            l.refreshContent(false);
+
             for (std::vector<Station>::const_iterator sit = l.firstStation(); sit != l.lastStation(); sit++){
                 const Station& s = *sit;
                 station_strings.push_back(new DrawString(5,pos, 50, s.getName(), 5, "sans", 200, 200, 50, GAI_TEXT_NORMAL));
@@ -103,7 +104,7 @@ namespace wm_vvo {
             ::gai_draw_update_bg();
             last_data_update = ::time(0) - interval - 1;
             last_image_update = ::time(0) - interval - 1;
-        }
+        } 
 
         time_t now = time(0);
         int div1 = now - last_data_update;
@@ -119,7 +120,7 @@ namespace wm_vvo {
             const LineGroup& l = *it;
 
             if (div1 > interval){
-                Collector::getCollector().fillLineGroup(*it);
+                l.refreshContent(true);
                 last_data_update = ::time(0);
             }
 

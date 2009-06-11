@@ -5,9 +5,15 @@ CXXFLAGS+= -DBOOST_REGEX_MATCH_EXTRA
 CXXFLAGS+= -O3
 #CXXFLAGS+= -g
 CXXFLAGS+=`pkg-config --cflags gai`
-LDFLAGS+=-L ../wmapp-0.0.4.3 -lcurl -lboost_regex 
+LDFLAGS+=-L ../wmapp-0.0.4.3 -lcurl -lboost_regex
 LDFLAGS+=-L/usr/lib/lib -lgai -lgdk_pixbuf-2.0 -lm
 LDFLAGS+=-O3
+
+ifeq ($(NO_THREAD),1)
+	CXXFLAGS+= -DNOT_USE_THREADS
+else
+	LDFLAGS+= -lboost_thread
+endif
 
 all: $(BIN)
 

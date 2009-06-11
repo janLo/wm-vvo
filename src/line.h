@@ -5,6 +5,10 @@
 #include <string>
 #include <vector>
 #include <boost/utility.hpp>
+#ifndef NOT_USE_THREADS
+#include <boost/thread.hpp>
+#include <boost/shared_ptr.hpp>
+#endif
 
 #include <time.h>
 
@@ -53,6 +57,9 @@ namespace wm_vvo {
             std::string id_name;
             std::string id_regexp;
             std::string direction_regexp;
+#ifndef NOT_USE_THREADS
+            boost::shared_ptr<boost::mutex> update_mutex;
+#endif
             mutable std::vector<Line::Result> results;
 
     };

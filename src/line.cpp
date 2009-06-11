@@ -3,25 +3,47 @@
 
 namespace wm_vvo {
     Line::Line(const std::string id, const std::string& id_regexp, const std::string& line_regexp)
-        : id_name(id), id_regexp(id_regexp), direction_regexp(line_regexp)
+        : id_name(id), 
+          id_regexp(id_regexp), 
+          direction_regexp(line_regexp)
+#ifndef NOT_USE_THREADS
+        , update_mutex(new boost::mutex)
+#endif
     {
     }
+
+
     Line::Line(const std::string id, const std::string& line_regexp)
-        : id_name(id), id_regexp(id), direction_regexp(line_regexp)
+        : id_name(id), 
+          id_regexp(id), 
+          direction_regexp(line_regexp)
+#ifndef NOT_USE_THREADS
+        , update_mutex(new boost::mutex)
+#endif
     {
     }
+
     Line::~Line(){}
 
     void Line::clearResults() const {
+#ifndef NOT_USE_THREADS
+        boost::lock_guard<boost::mutex> lock(*update_mutex);
+#endif
         results.clear();
     }
 
     void Line::addResult(int minutes, const std::string& direction) const {
+#ifndef NOT_USE_THREADS
+        boost::lock_guard<boost::mutex> lock(*update_mutex);
+#endif
         results.push_back(Line::Result(minutes, direction));
         std::sort(results.begin(), results.end());
     }
 
     const Line::Result&  Line::getValidResult() const {
+#ifndef NOT_USE_THREADS
+        boost::lock_guard<boost::mutex> lock(*update_mutex);
+#endif
         for (ResultIterator it = results.begin(); it != results.end(); it++){
             if ((*it).isValid())
                 return *it;

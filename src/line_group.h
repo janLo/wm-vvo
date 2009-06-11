@@ -4,6 +4,10 @@
 #include <string>
 #include <vector>
 #include <boost/utility.hpp>
+#ifndef NOT_USE_THREADS
+#include <boost/thread.hpp>
+#include <boost/shared_ptr.hpp>
+#endif
 
 #include "station.h"
 
@@ -13,7 +17,13 @@ namespace wm_vvo {
 
         std::vector<Station> stations;
         std::string headline;
-
+#ifndef NOT_USE_THREADS
+        mutable bool work_request;
+        mutable bool working;
+        boost::shared_ptr<boost::mutex> request_mutex;
+        boost::shared_ptr<boost::condition_variable> wait_cond;
+        mutable boost::shared_ptr<boost::thread> worker;
+#endif
 
         public:
         LineGroup(const std::string& headline);
@@ -30,10 +40,15 @@ namespace wm_vvo {
         StationIterator firstStation() const;
         StationIterator lastStation() const;
         int getStationCount() const;
+        void refreshContent(bool async) const;
 
         private:
 
         StationIterator findStation(const std::string& name) const;
+#ifndef NOT_USE_THREADS
+        void workLoop() const;
+#endif
+
     };
 
 }

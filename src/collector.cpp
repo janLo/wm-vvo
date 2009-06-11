@@ -7,6 +7,7 @@
 #include <boost/algorithm/string/erase.hpp>
 #include <boost/regex/icu.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/assign/list_of.hpp>
 
 
 #include "collector.h"
@@ -33,17 +34,16 @@ namespace wm_vvo {
     Collector::Collector(){
         curl = ::curl_easy_init();
 
-
-        this->html_preplaces.push_back(std::pair<std::string, std::string>("&quot;", "\""));
-        this->html_preplaces.push_back(std::pair<std::string, std::string>("&#246;", "ö"));
-        this->html_preplaces.push_back(std::pair<std::string, std::string>("&#223;", "ß"));
-        this->html_preplaces.push_back(std::pair<std::string, std::string>("&#252;", "ü"));
-        this->html_preplaces.push_back(std::pair<std::string, std::string>("&#228;", "ä"));
-        this->html_preplaces.push_back(std::pair<std::string, std::string>("&#196;", "Ä"));
-        this->html_preplaces.push_back(std::pair<std::string, std::string>("&#214;", "Ö"));
-        this->html_preplaces.push_back(std::pair<std::string, std::string>("&#220;", "Ü"));
-        this->html_preplaces.push_back(std::pair<std::string, std::string>("&#38;", "&"));
-        //	this->html_preplaces.push_back(std::pair<std::string, std::string>("", ""));
+        this->html_preplaces = boost::assign::list_of<std::pair<std::string, std::string> >
+        ("&quot;", "\"")
+        ("&#246;", "ö")
+        ("&#223;", "ß")
+        ("&#252;", "ü")
+        ("&#228;", "ä")
+        ("&#196;", "Ä")
+        ("&#214;", "Ö")
+        ("&#220;", "Ü")
+        ("&#38;", "&");
     }
 
     Collector::~Collector(){
@@ -57,47 +57,54 @@ namespace wm_vvo {
     }
 
     inline const std::string Collector::fetchData(const std::string& station){
-        CURLcode code;
-        static char errorBuffer[CURL_ERROR_SIZE];
-
-        code = ::curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errorBuffer);
-        if (code != CURLE_OK)
-            throw std::runtime_error("cannot set ErrorBuffer");
-
-        code = ::curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-        if (code != CURLE_OK)
-            throw std::runtime_error("cannot set Redirect Stuff");
-
-        code = ::curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
-        if (code != CURLE_OK)
-            throw std::runtime_error("cannot set WriterFunc");
-
-
         std::string readed;
-        code = ::curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readed);
-        if (code != CURLE_OK)
-            throw std::runtime_error("cannot set Databuffer");
 
+        {
+#ifndef NOT_USE_THREADS
+            boost::lock_guard<boost::mutex> lock(fetch_mutex);
+#endif
 
-        std::string ort(ConfigParser::getConfigParser().getLocation());
-        std::string verz(boost::lexical_cast<std::string, int>(ConfigParser::getConfigParser().getDelay()));
-        std::string url("http://widgets.vvo-online.de/abfahrtsmonitor/Abfahrten.do?ort=" + ort + "&hst=" + station + "&vz=" + verz); 
-        boost::algorithm::replace_all(url, " ", "%20");
-        code = ::curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        if (code != CURLE_OK)
-            throw std::runtime_error("cannot set URL");
+            CURLcode code;
+            static char errorBuffer[CURL_ERROR_SIZE];
 
-        std::string proxy(ConfigParser::getConfigParser().getProxy());
-        if(proxy.size() > 0){
-            code = ::curl_easy_setopt(curl, CURLOPT_PROXY, proxy.c_str());
+            code = ::curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errorBuffer);
             if (code != CURLE_OK)
-                throw std::runtime_error("cannot set Proxy");
+                throw std::runtime_error("cannot set ErrorBuffer");
+    
+            code = ::curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+            if (code != CURLE_OK)
+                throw std::runtime_error("cannot set Redirect Stuff");
+    
+            code = ::curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
+            if (code != CURLE_OK)
+                throw std::runtime_error("cannot set WriterFunc");
+    
+    
+            code = ::curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readed);
+            if (code != CURLE_OK)
+                throw std::runtime_error("cannot set Databuffer");
+    
+    
+            std::string ort(ConfigParser::getConfigParser().getLocation());
+            std::string verz(boost::lexical_cast<std::string, int>(ConfigParser::getConfigParser().getDelay()));
+            std::string url("http://widgets.vvo-online.de/abfahrtsmonitor/Abfahrten.do?ort=" + ort + "&hst=" + station + "&vz=" + verz); 
+            boost::algorithm::replace_all(url, " ", "%20");
+            code = ::curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+            if (code != CURLE_OK)
+                throw std::runtime_error("cannot set URL");
+    
+            std::string proxy(ConfigParser::getConfigParser().getProxy());
+            if(proxy.size() > 0){
+                code = ::curl_easy_setopt(curl, CURLOPT_PROXY, proxy.c_str());
+                if (code != CURLE_OK)
+                    throw std::runtime_error("cannot set Proxy");
+            }
+    
+            code = ::curl_easy_perform(curl);
+            if (code != CURLE_OK)
+                throw std::runtime_error("cannot perform Request");
+    
         }
-
-        code = ::curl_easy_perform(curl);
-        if (code != CURLE_OK)
-            throw std::runtime_error("cannot perform Request");
-
 
 
         for (std::vector<std::pair<std::string, std::string> >::iterator it = html_preplaces.begin();
@@ -108,7 +115,7 @@ namespace wm_vvo {
         return readed;
     }
 
-    inline void Collector::fillLine(const Line& line,  std::string data){
+    inline void Collector::fillLine(const Line& line,  std::string data) {
 
         std::string regex("\\[\"(" + line.getRegexp() + ")\",\"(" + line.getDirRegexp() + ")\",\"([\\d]+)\"\\]");
         boost::u32regex e(boost::make_u32regex(regex));
@@ -140,7 +147,7 @@ namespace wm_vvo {
         }
     }
 
-    void Collector::fillLineGroup(const LineGroup& l){
+    void Collector::fillLineGroup(const LineGroup& l) {
         for (LineGroup::StationIterator it = l.firstStation();
                 it != l.lastStation(); it++)
         {
@@ -148,4 +155,6 @@ namespace wm_vvo {
         }
 
     }
+
+    
 }
