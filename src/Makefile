@@ -28,6 +28,7 @@ install:
 
 
 
+
 collector.o: collector.cpp \
 	collector.h \
 	line_group.h \
@@ -44,14 +45,14 @@ dockapp.o: dockapp.cpp \
 	line_group.h \
 	station.h \
 	line.h \
-	config_parser.h \
-	collector.h
+	config_parser.h
 line.o: line.cpp \
 	line.h
 line_group.o: line_group.cpp \
 	line_group.h \
 	station.h \
-	line.h
+	line.h \
+	collector.h
 station.o: station.cpp \
 	station.h \
 	line.h
@@ -71,7 +72,6 @@ line_group.o: line_group.h \
 line.o: line.h
 station.o: station.h \
 	line.h
-
 
 
 .PHONY: all clean install
